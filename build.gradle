@@ -16,7 +16,7 @@ def release_version = project.hasProperty('version') ? project.getProperty('vers
 def group_id='com.minh.gradle'
 def artifact_id='minh.gradle'
 def version_prop_file='gradle.properties'
-def branch = project.hasProperty('branch') ? project.getProperty('branch') : 'init'
+def branch = project.hasProperty('branch') ? project.getProperty('branch') : 'master'
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 repositories {
