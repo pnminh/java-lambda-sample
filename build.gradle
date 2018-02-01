@@ -13,8 +13,8 @@ task wrapper(type: Wrapper) {
 }
 def artifactory_repo_url = 'http://172.17.0.2:8081/artifactory'
 def release_version = project.hasProperty('version') ? project.getProperty('version') : 'latest'
-def group_id='com.minh.gradle'
-def artifact_id='minh.gradle'
+def group_id='com.minh.aws'
+def artifact_id="$project.name"
 def version_prop_file='gradle.properties'
 def branch = project.hasProperty('branch') ? project.getProperty('branch') : 'master'
 sourceCompatibility = 1.7
