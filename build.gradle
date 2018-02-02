@@ -11,7 +11,8 @@ apply plugin: 'com.jfrog.artifactory'
 task wrapper(type: Wrapper) {
     gradleVersion = '4.4.1'
 }
-def artifactory_repo_url = 'http://172.17.0.2:8081/artifactory'
+def artifactory_repo_url = project.hasProperty('artifactory_url')?project.hasProperty('artifactory_url'):"http://localhost:8081/artifactory"
+def repo_key = project.hasProperty('artifactory_release_repo_key')?project.hasProperty('artifactory_release_repo_key'):"example-repo-local"
 def release_version = project.hasProperty('version') ? project.getProperty('version') : 'latest'
 def group_id='com.minh.aws'
 def artifact_id="$project.name"
@@ -37,7 +38,7 @@ artifactory {
     contextUrl = artifactory_repo_url
     publish {
         repository {
-            repoKey = 'example-repo-local'
+            repoKey = "$repo_key"
             username = project.hasProperty('artifactory_user') ? project.getProperty('artifactory_user') : 'admin'
             password = project.hasProperty('artifactory_pass') ? project.getProperty('artifactory_pass') : 'admin'
         }
