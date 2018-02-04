@@ -15,7 +15,8 @@ node {
         }
     }else{
         stage('build and publish snapshot'){
-            sh "./gradlew publish"
+            //branch to distinguish release_aws and other branches
+            sh "./gradlew publish -Pbranch=$branch"
         }
     }
 
