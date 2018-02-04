@@ -11,25 +11,28 @@ apply plugin: 'com.jfrog.artifactory'
 task wrapper(type: Wrapper) {
     gradleVersion = '4.4.1'
 }
-def artifactory_repo_url = project.hasProperty('artifactory_url')?project.getProperty('artifactory_url'):"http://localhost:8081/artifactory"
-def repo_key = project.hasProperty('artifactory_release_repo_key')?project.getProperty('artifactory_release_repo_key'):"example-repo-local"
-def release_version = project.hasProperty('version') ? project.getProperty('version') : 'latest'
-def group_id='com.minh.aws'
-def artifact_id="$project.name"
-def version_prop_file='gradle.properties'
-def branch = project.hasProperty('branch') ? project.getProperty('branch') : 'master'
+def artifactory_repo_url = project.hasProperty('artifactory_url') ? project.getProperty('artifactory_url') : "http://localhost:8081/artifactory"
+def release_repo_key = project.hasProperty('artifactory_release_repo_key') ? project.getProperty('artifactory_release_repo_key') : "release-repo"
+def snapshot_repo_key = project.hasProperty('artifactory_snapshot_repo_key') ? project.getProperty('artifactory_snapshot_repo_key') : "snapshot-repo"
+def group_id = 'com.minh.aws'
+def artifact_id = "$project.name"
+def version_prop_file = 'gradle.properties'
+def branch = project.hasProperty('branch') ? project.getProperty('branch') : 'release_aws'
+def release_branch = project.hasProperty('release_branch')?project.getProperty('release_branch'):'release_aws'
+def artifact_version = (branch=="release_aws"?project.property("version"):project.property("version").toString()+"-SNAPSHOT")
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 repositories {
     mavenCentral()
 }
-dependencies{
+dependencies {
     compile 'com.amazonaws:aws-lambda-java-core:1.2.0'
     testCompile 'junit:junit:4.12'
 }
-jar{
+
+jar {
     baseName = "${artifact_id}"
-    version = "${release_version}"
+    version = "${artifact_version}"
     from {
         configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
     }
@@ -38,7 +41,7 @@ artifactory {
     contextUrl = artifactory_repo_url
     publish {
         repository {
-            repoKey = "$repo_key"
+            repoKey = branch=="release_aws"?artifactory_release_repo_key:artifactory_snapshot_repo_key
             username = project.hasProperty('artifactory_user') ? project.getProperty('artifactory_user') : 'admin'
             password = project.hasProperty('artifactory_pass') ? project.getProperty('artifactory_pass') : 'admin'
         }
@@ -50,10 +53,10 @@ artifactory {
 release {
     failOnCommitNeeded = false
     failOnPublishNeeded = false
-    failOnSnapshotDependencies = false
+    failOnSnapshotDependencies = true
     failOnUnversionedFiles = false
     failOnUpdateNeeded = false
-    tagTemplate = "${artifact_id}" + "." + "${release_version}"
+    tagTemplate = "${artifact_id}" + "." + "${artifact_version}"
     buildTasks = ['build', 'artifactoryPublish']
     versionPatterns = [
             /(\d+)([^\d]*$)/: { Matcher m, Project p -> m.replaceAll("${(m[0][1] as int) + 1}${m[0][2]}") }
@@ -64,7 +67,7 @@ release {
 
     git {
         commitVersionFileOnly = true
-        requireBranch = "${branch}"
+        requireBranch = "${release_branch}"
     }
 
     versionPropertyFile = "${version_prop_file}"
@@ -74,8 +77,17 @@ publishing {
         mavenJava(MavenPublication) {
             from components.java
             artifactId "${artifact_id}"
-            version "${release_version}"
+            version "${artifact_version}"
             groupId "${group_id}"
         }
     }
 }
+/*
+task publish(dependsOn:['clean', 'build','artifactPublish']){
+
+}*/
+publish.dependsOn 'clean'
+publish.dependsOn 'build'
+publish.dependsOn 'artifactoryPublish'
+artifactoryPublish.mustRunAfter 'build'
+build.mustRunAfter 'clean'
