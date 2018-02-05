@@ -23,6 +23,7 @@ node {
         stage('build and publish snapshot'){
             //branch to distinguish release_aws and other branches
             sh "./gradlew publish -Pbranch=$GIT_BRANCH"
+            build job: 'deploy-aws-lambda'
         }
     }
 
