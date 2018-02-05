@@ -41,7 +41,7 @@ artifactory {
     contextUrl = artifactory_repo_url
     publish {
         repository {
-            repoKey = branch=="release_aws"?artifactory_release_repo_key:artifactory_snapshot_repo_key
+            repoKey = branch=="release_aws"?release_repo_key:snapshot_repo_key
             username = project.hasProperty('artifactory_user') ? project.getProperty('artifactory_user') : 'admin'
             password = project.hasProperty('artifactory_pass') ? project.getProperty('artifactory_pass') : 'admin'
         }
