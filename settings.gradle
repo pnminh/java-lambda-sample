@@ -15,4 +15,4 @@ include 'api'
 include 'services:webservice'
 */
 
-rootProject.name = 'java-lambda-sample'
+rootProject.name = 'lambda-sample'

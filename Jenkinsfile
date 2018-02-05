@@ -23,8 +23,15 @@ node {
         stage('build and publish snapshot'){
             //branch to distinguish release_aws and other branches
             sh "./gradlew publish -Pbranch=$GIT_BRANCH"
-            build job: 'deploy-aws-lambda'
+        }
+        stage (' initiate deploy job'){
+            gradle_props_file = 'gradle.properties'
+            artifact_props = readProperties file: gradle_props_file
+            def paramList = []
+            artifact_props.each { k, v -> paramList << string(name: k, value: v)    }
+            build job: "deploy-aws-lambda", parameters: paramList
         }
     }
+
 
 }

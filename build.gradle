@@ -14,8 +14,8 @@ task wrapper(type: Wrapper) {
 def artifactory_repo_url = project.hasProperty('artifactory_url') ? project.getProperty('artifactory_url') : "http://localhost:8081/artifactory"
 def release_repo_key = project.hasProperty('artifactory_release_repo_key') ? project.getProperty('artifactory_release_repo_key') : "release-repo"
 def snapshot_repo_key = project.hasProperty('artifactory_snapshot_repo_key') ? project.getProperty('artifactory_snapshot_repo_key') : "snapshot-repo"
-def group_id = 'com.minh.aws'
-def artifact_id = "$project.name"
+def group_id = project.groupId
+def artifact_id = project.artifactId
 def version_prop_file = 'gradle.properties'
 def branch = project.hasProperty('branch') ? project.getProperty('branch') : 'release_aws'
 def release_branch = project.hasProperty('release_branch')?project.getProperty('release_branch'):'release_aws'
