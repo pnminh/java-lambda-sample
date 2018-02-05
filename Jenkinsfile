@@ -29,6 +29,7 @@ node {
             artifact_props = readProperties file: gradle_props_file
             def paramList = []
             artifact_props.each { k, v -> paramList << string(name: k, value: v)    }
+            print paramList
             build job: "deploy-aws-lambda", parameters: paramList
         }
     }
