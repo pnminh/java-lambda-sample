@@ -28,6 +28,7 @@ repositories {
 dependencies {
     compile 'com.amazonaws:aws-lambda-java-core:1.2.0'
     testCompile 'junit:junit:4.12'
+    compile 'joda-time:joda-time:2.9.9'
 }
 
 jar {
