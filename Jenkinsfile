@@ -30,7 +30,7 @@ node {
             def paramList = []
             artifact_props.each { k, v -> paramList << string(name: k, value: v)    }
             print paramList
-            build job: "deploy-aws-lambda", parameters: paramList
+            build job: "deploy-aws-lambda", parameters: [string(name: 'artifactId', value: String.valueOf(artifact_props['artifactId']))]
         }
     }
 
