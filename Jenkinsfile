@@ -27,6 +27,7 @@ node {
         stage (' initiate deploy job'){
             gradle_props_file = 'gradle.properties'
             artifact_props = readProperties file: gradle_props_file
+            artifact_props['version'] += '-SNAPSHOT'
             def paramList = []
             artifact_props.each { k, v -> paramList << string(name: k, value: v)    }
             print paramList
