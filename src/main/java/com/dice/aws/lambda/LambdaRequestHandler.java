@@ -8,6 +8,6 @@ public class LambdaRequestHandler
     public String handleRequest(String input, Context context) {
         context.getLogger().log("Input: " + input);
         DateTime dateTime = new DateTime();
-        return "Hello World 4th version: " + input +". Current dateTime is: "+ dateTime.toString();
+        return "Hello World 5th version: " + input +". Current dateTime is: "+ dateTime.toString();
     }
 }
